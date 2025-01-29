@@ -1,0 +1,34 @@
+name: Deploy React App to HostGator
+
+on:
+  push:
+    branches:
+      - main # Or the branch you use to deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.6.1'  # Use the appropriate Node.js version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build React app
+      run: npm run build
+
+    - name: Deploy to HostGator via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4
+      with:
+        ftp-server: ftp://yourdomain.com  # Replace with your FTP server address
+        ftp-username: ${{ secrets.FTP_USERNAME }}  # Set this in GitHub Secrets
+        ftp-password: ${{ secrets.FTP_PASSWORD }}  # Set this in GitHub Secrets
+        local-dir: ./build
+        remote-dir: /public_html/your-subdirectory  # Update with the correct remote folder
